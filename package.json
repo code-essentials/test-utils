@@ -1,5 +1,5 @@
 {
-  "name": "@graph/test",
+  "name": "@code-essentials/test",
   "version": "1.0.0",
   "description": "",
   "type": "module",
@@ -11,14 +11,14 @@
     "prebuild:debug": "pnpm run clean",
     "build": "tsc",
     "build:debug": "tsc -p tsconfig.debug.json",
-    "test:lib": "pnpm run build:debug && pnpm run test",
+    "pretest": "pnpm run build:debug",
     "test": "ava"
   },
   "devDependencies": {
-    "@ava/typescript": "catalog:",
-    "ava": "catalog:",
-    "@graph/tsconfig": "workspace:",
-    "typescript": "catalog:"
+    "@ava/typescript": "^6.0.0",
+    "@code-essentials/tsconfig": "^1.0.1",
+    "ava": "^6.4.1",
+    "typescript": "^5.9.2"
   },
   "ava": {
     "files": [
@@ -34,5 +34,6 @@
       "compile": false
     }
   },
-  "license": "See LICENSE.md"
+  "author": "Isaac Valdez",
+  "license": "MIT"
 }

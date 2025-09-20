@@ -1,5 +1,5 @@
 {
-    "extends": "@graph/tsconfig/tsconfig.json",
+    "extends": "@code-essentials/tsconfig/tsconfig.json",
     "compilerOptions": {
         "outDir": "dist",
         "rootDir": "src",
