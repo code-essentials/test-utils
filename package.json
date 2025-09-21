@@ -1,6 +1,6 @@
 {
   "name": "@code-essentials/test-utils",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "type": "module",
   "main": "./dist/index.js",
@@ -12,7 +12,8 @@
     "build": "tsc",
     "build:debug": "tsc -p tsconfig.debug.json",
     "pretest": "pnpm run build:debug",
-    "test": "ava"
+    "test": "ava",
+    "prepublishOnly": "npm test && npm run build"
   },
   "devDependencies": {
     "@ava/typescript": "^6.0.0",
@@ -34,6 +35,10 @@
       "compile": false
     }
   },
-  "author": "Isaac Valdez",
+  "author": {
+    "name": "Isaac Valdez",
+    "email": "isaac_valdez@msn.com",
+    "url": "https://i12345.github.io"
+  },
   "license": "MIT"
 }
