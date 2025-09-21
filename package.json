@@ -1,23 +1,26 @@
 {
   "name": "@code-essentials/test-utils",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "files": [
+    "dist/**/*"
+  ],
   "scripts": {
     "clean": "rm -rf dist",
-    "prebuild": "pnpm run clean",
-    "prebuild:debug": "pnpm run clean",
+    "prebuild": "npm run clean",
+    "prebuild:debug": "npm run clean",
     "build": "tsc",
     "build:debug": "tsc -p tsconfig.debug.json",
-    "pretest": "pnpm run build:debug",
+    "pretest": "npm run build:debug",
     "test": "ava",
     "prepublishOnly": "npm test && npm run build"
   },
   "devDependencies": {
     "@ava/typescript": "^6.0.0",
-    "@code-essentials/tsconfig": "^1.0.1",
+    "@code-essentials/tsconfig": "^1.0.2",
     "ava": "^6.4.1",
     "typescript": "^5.9.2"
   },
