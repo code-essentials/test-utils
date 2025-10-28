@@ -6,42 +6,33 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "files": [
-    "dist/**/*"
+    "dist"
   ],
   "scripts": {
     "clean": "rm -rf dist",
-    "prebuild": "npm run clean",
-    "prebuild:debug": "npm run clean",
+    "prebuild": "pnpm run clean",
+    "prebuild:debug": "pnpm run clean",
     "build": "tsc",
     "build:debug": "tsc -p tsconfig.debug.json",
-    "pretest": "npm run build:debug",
+    "pretest": "pnpm run build:debug",
     "test": "ava",
-    "prepublishOnly": "npm test && npm run build"
+    "prepublishOnly": "pnpm test && pnpm run build"
   },
   "devDependencies": {
     "@ava/typescript": "^6.0.0",
-    "@code-essentials/tsconfig": "^1.0.2",
+    "@code-essentials/tsconfig": "^1.0.3",
+    "@code-essentials/ava-typescript": "^1.0.2",
     "ava": "^6.4.1",
     "typescript": "^5.9.2"
-  },
-  "ava": {
-    "files": [
-      "src/**/*.spec.ts"
-    ],
-    "typescript": {
-      "rewritePaths": {
-        "src/": "dist/"
-      },
-      "extensions": [
-        "ts"
-      ],
-      "compile": false
-    }
   },
   "author": {
     "name": "Isaac Valdez",
     "email": "isaac_valdez@msn.com",
     "url": "https://i12345.github.io"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/code-essentials/test-utils.git"
   },
   "license": "MIT"
 }
