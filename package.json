@@ -12,7 +12,7 @@
     "clean": "rm -rf dist",
     "prebuild": "pnpm run clean",
     "prebuild:debug": "pnpm run clean",
-    "build": "tsc",
+    "build": "tsc  -p tsconfig.prod.json",
     "build:debug": "tsc -p tsconfig.debug.json",
     "pretest": "pnpm run build:debug",
     "test": "ava",
@@ -20,10 +20,10 @@
   },
   "devDependencies": {
     "@ava/typescript": "^6.0.0",
-    "@code-essentials/tsconfig": "^1.0.3",
-    "@code-essentials/ava-typescript": "^1.0.2",
+    "@code-essentials/ava-typescript": "file:../ava-typescript",
+    "@code-essentials/tsconfig": "file:../tsconfig",
     "ava": "^6.4.1",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.3"
   },
   "author": {
     "name": "Isaac Valdez",
