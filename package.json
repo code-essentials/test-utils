@@ -10,13 +10,15 @@
   ],
   "scripts": {
     "clean": "rm -rf dist",
-    "prebuild": "pnpm run clean",
-    "prebuild:debug": "pnpm run clean",
+    "prebuild": "npm run clean",
+    "prebuild:debug": "npm run clean",
     "build": "tsc  -p tsconfig.prod.json",
     "build:debug": "tsc -p tsconfig.debug.json",
-    "pretest": "pnpm run build:debug",
-    "test": "ava",
-    "prepublishOnly": "pnpm test && pnpm run build"
+    "pretest": "npm run build:debug",
+    "test": "npm run test:run",
+    "pretest:run": "",
+    "test:run": "ava",
+    "prepublishOnly": "pnpm test && npm run build"
   },
   "devDependencies": {
     "@ava/typescript": "^6.0.0",
