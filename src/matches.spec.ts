@@ -1,6 +1,7 @@
 import test from "ava"
 import { lambda } from "./pattern.js"
 import { matches, req_matches } from "./matches.js"
+import stripAnsi from 'strip-ansi'
 
 test("literal 1", t => t.true(matches("a", "a")))
 
@@ -15,3 +16,31 @@ test("lambda 1", t => req_matches(t, 112, lambda(_ => _ > 100 && Math.floor(Math
 test("array 1", t => t.true(matches([1, 2, 3], [1, lambda<number>(x => (x % 2) === 0), 3])))
 test("array 2", t => t.false(matches([1, 2], [1, lambda<number>(x => (x % 2) === 0), 3])))
 test("array 3", t => t.false(matches([1, 2], [1, lambda<number>(x => (x % 2) === 1)])))
+
+test("formatting ok", t => {
+    t.plan(1)
+
+    req_matches({
+        true(ok, message): ok is true {
+            t.is(message, undefined)
+
+            return ok
+        },
+    }, 1, 1)
+})
+
+test("formatting err", t => {
+    t.plan(3)
+
+    req_matches({
+        true(ok, message): ok is true {
+            t.not(message, undefined)
+            t.is(message?.length, 96)
+            t.is(stripAnsi(message!), `actual, expected
+{"type":"error","item":0,"pattern":1}
+1`)
+
+            return ok
+        },
+    }, 0, 1)
+})

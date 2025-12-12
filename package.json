@@ -1,6 +1,6 @@
 {
   "name": "@code-essentials/test-utils",
-  "version": "1.0.5",
+  "version": "1.1.0",
   "description": "",
   "type": "module",
   "main": "./dist/index.js",
@@ -18,13 +18,14 @@
     "test": "npm run test:run",
     "pretest:run": "",
     "test:run": "ava",
-    "prepublishOnly": "pnpm test && npm run build"
+    "prepublishOnly": "npm test && npm run build"
   },
   "devDependencies": {
     "@ava/typescript": "^6.0.0",
-    "@code-essentials/ava-typescript": "file:../ava-typescript",
-    "@code-essentials/tsconfig": "file:../tsconfig",
+    "@code-essentials/ava-typescript": "^1.1.2",
+    "@code-essentials/tsconfig": "^1.2.6",
     "ava": "^6.4.1",
+    "strip-ansi": "^7.1.2",
     "typescript": "^5.9.3"
   },
   "author": {
@@ -36,5 +37,8 @@
     "type": "git",
     "url": "https://github.com/code-essentials/test-utils.git"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^5.6.2"
+  }
 }
