@@ -1,5 +1,5 @@
 import test from "ava"
-import { ERR_ARRAY_LENGTH_MISMATCH, ERR_FIELD_MISSING, ERR_FIELD_NOT_MISSING, fieldMissing, lambda, match, PatternMatchResult_Array_Error_LengthMismatch, PatternMatchResult_Lambda_Error, PatternMatchResult_PartialObj, PatternMatchResult_PartialObj_Error, PatternMatchResult_PartialObj_Success, PatternMatchResultError_PartialObj_FieldMissing, PatternMatchResultError_PartialObj_FieldNotMissing, PatternMatchResultType } from "./pattern.js"
+import { ERR_ARRAY_LENGTH_MISMATCH, ERR_FIELD_MISSING, ERR_FIELD_NOT_MISSING, fieldMissing, lambda, match, PatternMatchResult_Array_Error_LengthMismatch, PatternMatchResult_Lambda_Error, PatternMatchResult_PartialObj, PatternMatchResult_PartialObj_Error, PatternMatchResult_PartialObj_Success, PatternMatchResultError_PartialObj_FieldMissing, PatternMatchResultError_PartialObj_FieldNotMissing, PatternMatchResultType, subsets } from "./pattern.js"
 
 test("literal 1", t => {
     const _ = match("a", "a")
@@ -94,4 +94,24 @@ test("array 3", t => {
             pattern: lambda_pattern,
         }
     })
+})
+
+test("subset 1", t => {
+    const _ = match([1, 2, 3, 4], subsets([4, 2, 1]))
+    t.is(_.type, PatternMatchResultType.success)
+})
+
+test("subset 2", t => {
+    const _ = match([1, 2, 3, 4], subsets([4, 2, 1, 5]))
+    t.is(_.type, PatternMatchResultType.error)
+})
+
+test("subset 3", t => {
+    const _ = match([1, 2, 3, 4], subsets(["a"]))
+    t.is(_.type, PatternMatchResultType.error)
+})
+
+test("subset 4", t => {
+    const _ = match([1, 2, 3, 4], subsets([4, 2, 1, 4, 2, 1]))
+    t.is(_.type, PatternMatchResultType.success)
 })

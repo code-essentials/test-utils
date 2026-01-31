@@ -54,7 +54,7 @@ export interface PatternMatchResultError_PartialObj_FieldNotMissing extends Patt
 
 export type PatternArray<T> =
     T extends any[] ? (
-        PatternPartialObj<T> & Pattern<T[keyof T]>[] & { [K in keyof T as K extends number ? K : never]: Pattern<T[K]> }
+        PatternPartialObj<T> & Pattern<T[keyof T & number]>[] & { [K in keyof T as K extends number ? K : never]: Pattern<T[K]> }
     ) :
     never
 
@@ -66,6 +66,41 @@ export interface PatternMatchResult_Array_Error_LengthMismatch<T extends any[] =
 export type PatternMatchResult_Array<T extends any[] = any[], Pattern_ extends PatternArray<T> = PatternArray<T>> =
     | PatternMatchResult_PartialObj<T, Pattern_>
     | PatternMatchResult_Array_Error_LengthMismatch<T, Pattern_>
+
+type ItemPatternMatches<ItemT = any, ItemPatternT extends Pattern<ItemT> = Pattern<ItemT>> = {
+    item_pattern: ItemPatternT,
+    matches: PatternMatchResult<ItemT, ItemPatternT>[]
+    matched: boolean
+}[]
+
+export class ArraySubsetNoMatch<ItemT = any, ItemPatternT extends Pattern<ItemT> = Pattern<ItemT>> extends AggregateError {
+    constructor(
+        readonly item_pattern_matches: ItemPatternMatches<ItemT, ItemPatternT>,
+    ) {
+        super(
+            item_pattern_matches,
+            ArraySubsetNoMatch.ERR_MSG,
+        )
+    }
+
+    static readonly ERR_MSG = "no item was found in array satisfying pattern element"
+}
+
+export function subsets<const T extends any[] = any[], const PatternT extends PatternArray<T> = PatternArray<T>>(pattern: PatternT): Pattern<T> {
+    return lambda(array => {
+        const item_pattern_matches = pattern.map<ItemPatternMatches[number]>(item_pattern => {
+            const matches = array.map(item => match(item, item_pattern))
+            const matched = matches.some(({ type }) => type === PatternMatchResultType.success)
+
+            return { item_pattern, matches, matched }
+        })
+
+        if (item_pattern_matches.some(({ matched }) => !matched))
+            throw new ArraySubsetNoMatch(item_pattern_matches)
+
+        return true
+    })
+}
 
 const patternLambdaKey = Symbol("pattern lambda")
 export type PatternLambda<T> = {
