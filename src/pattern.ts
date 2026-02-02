@@ -86,7 +86,7 @@ export class ArraySubsetNoMatch<ItemT = any, ItemPatternT extends Pattern<ItemT>
     static readonly ERR_MSG = "no item was found in array satisfying pattern element"
 }
 
-export function subsets<const T extends any[] = any[], const PatternT extends PatternArray<T> = PatternArray<T>>(pattern: PatternT): Pattern<T> {
+export function subsets<const T extends unknown = unknown>(pattern: Pattern<T>[]): Pattern<T[]> {
     return lambda(array => {
         const item_pattern_matches = pattern.map<ItemPatternMatches[number]>(item_pattern => {
             const matches = array.map(item => match(item, item_pattern))
