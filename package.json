@@ -1,6 +1,6 @@
 {
   "name": "@code-essentials/test-utils",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "",
   "type": "module",
   "main": "./dist/index.js",
@@ -10,23 +10,26 @@
   ],
   "scripts": {
     "clean": "rm -rf dist",
-    "prebuild": "npm run clean",
+    "prebuild": "npm run lint",
+    "build": "npm run build:prod",
+    "prebuild:prod": "npm run clean",
     "prebuild:debug": "npm run clean",
-    "build": "tsc  -p tsconfig.prod.json",
+    "build:prod": "tsc -p tsconfig.prod.json",
     "build:debug": "tsc -p tsconfig.debug.json",
     "pretest": "npm run build:debug",
     "test": "npm run test:run",
     "pretest:run": "",
     "test:run": "ava",
-    "prepublishOnly": "npm test && npm run build"
+    "prepublishOnly": "npm test && npm run build",
+    "lint": "eslint ."
   },
   "devDependencies": {
-    "@ava/typescript": "^6.0.0",
-    "@code-essentials/ava-typescript": "^1.1.2",
-    "@code-essentials/tsconfig": "^1.2.6",
-    "ava": "^6.4.1",
-    "strip-ansi": "^7.1.2",
-    "typescript": "^5.9.3"
+    "@ava/typescript": "^7.0.0",
+    "@code-essentials/ava-typescript": "^1.1.3",
+    "@code-essentials/tsconfig": "^1.2.7",
+    "ava": "^8.0.1",
+    "strip-ansi": "^7.2.0",
+    "typescript": "^6.0.3"
   },
   "author": {
     "name": "Isaac Valdez",
