@@ -1,4 +1,4 @@
-export type Pattern<T = any> =
+export type Pattern<T = unknown> =
     | PatternLiteral<T>
     | PatternPartialObj<T>
     | PatternArray<T>
@@ -9,14 +9,14 @@ export enum PatternMatchResultType {
     error = "error",
 }
 
-export interface PatternMatchResult<T = any, Pattern_ extends Pattern<T> = Pattern<T>, Type extends PatternMatchResultType = PatternMatchResultType> {
+export interface PatternMatchResult<T = unknown, Pattern_ extends Pattern<T> = Pattern<T>, Type extends PatternMatchResultType = PatternMatchResultType> {
     readonly type: Type
     readonly item: T
     readonly pattern: Pattern_
 }
 
-export type PatternMatchResultSuccess<T = any, Pattern_ extends Pattern<T> = Pattern<T>> = PatternMatchResult<T, Pattern_, PatternMatchResultType.success>
-export type PatternMatchResultError<T = any, Pattern_ extends Pattern<T> = Pattern<T>> = PatternMatchResult<T, Pattern_, PatternMatchResultType.error>
+export type PatternMatchResultSuccess<T = unknown, Pattern_ extends Pattern<T> = Pattern<T>> = PatternMatchResult<T, Pattern_, PatternMatchResultType.success>
+export type PatternMatchResultError<T = unknown, Pattern_ extends Pattern<T> = Pattern<T>> = PatternMatchResult<T, Pattern_, PatternMatchResultType.error>
 
 export type PatternLiteral<T> = T
 
@@ -30,8 +30,7 @@ interface PatternMatchResult_PartialObj_Base<T extends object = object, Pattern_
     }
 }
 
-export interface PatternMatchResult_PartialObj_Success<T extends object = object, Pattern_ extends PatternPartialObj<T> = PatternPartialObj<T>> extends PatternMatchResult_PartialObj_Base<T, Pattern_, PatternMatchResultType.success> {
-}
+export type PatternMatchResult_PartialObj_Success<T extends object = object, Pattern_ extends PatternPartialObj<T> = PatternPartialObj<T>> = PatternMatchResult_PartialObj_Base<T, Pattern_, PatternMatchResultType.success>
 
 export interface PatternMatchResult_PartialObj_Error<T extends object = object, Pattern_ extends PatternPartialObj<T> = PatternPartialObj<T>> extends PatternMatchResult_PartialObj_Base<T, Pattern_, PatternMatchResultType.error> {
     errors: {
@@ -45,35 +44,35 @@ export type PatternMatchResult_PartialObj<T extends object = object, Pattern_ ex
 
 export const ERR_FIELD_MISSING = "field missing"
 export const ERR_FIELD_NOT_MISSING = "field not missing"
-export interface PatternMatchResultError_PartialObj_FieldMissing extends PatternMatchResultError {
+export interface PatternMatchResultError_PartialObj_FieldMissing<T = unknown, Pattern_ extends Pattern<T> = Pattern<T>> extends PatternMatchResultError<T, Pattern_> {
     message: typeof ERR_FIELD_MISSING
 }
-export interface PatternMatchResultError_PartialObj_FieldNotMissing extends PatternMatchResultError {
+export interface PatternMatchResultError_PartialObj_FieldNotMissing<T = unknown, Pattern_ extends Pattern<T> = Pattern<T>> extends PatternMatchResultError<T, Pattern_> {
     message: typeof ERR_FIELD_NOT_MISSING
 }
 
 export type PatternArray<T> =
-    T extends any[] ? (
+    T extends unknown[] ? (
         PatternPartialObj<T> & Pattern<T[keyof T & number]>[] & { [K in keyof T as K extends number ? K : never]: Pattern<T[K]> }
     ) :
     never
 
 export const ERR_ARRAY_LENGTH_MISMATCH = "length mismatch"
-export interface PatternMatchResult_Array_Error_LengthMismatch<T extends any[] = any[], Pattern_ extends PatternArray<T> = PatternArray<T>> extends PatternMatchResultError<T, Pattern_> {
+export interface PatternMatchResult_Array_Error_LengthMismatch<T extends unknown[] = unknown[], Pattern_ extends PatternArray<T> = PatternArray<T>> extends PatternMatchResultError<T, Pattern_> {
     message: typeof ERR_ARRAY_LENGTH_MISMATCH
 }
 
-export type PatternMatchResult_Array<T extends any[] = any[], Pattern_ extends PatternArray<T> = PatternArray<T>> =
+export type PatternMatchResult_Array<T extends unknown[] = unknown[], Pattern_ extends PatternArray<T> = PatternArray<T>> =
     | PatternMatchResult_PartialObj<T, Pattern_>
     | PatternMatchResult_Array_Error_LengthMismatch<T, Pattern_>
 
-type ItemPatternMatches<ItemT = any, ItemPatternT extends Pattern<ItemT> = Pattern<ItemT>> = {
+type ItemPatternMatches<ItemT = unknown, ItemPatternT extends Pattern<ItemT> = Pattern<ItemT>> = {
     item_pattern: ItemPatternT,
     matches: PatternMatchResult<ItemT, ItemPatternT>[]
     matched: boolean
 }[]
 
-export class ArraySubsetNoMatch<ItemT = any, ItemPatternT extends Pattern<ItemT> = Pattern<ItemT>> extends AggregateError {
+export class ArraySubsetNoMatch<ItemT = unknown, ItemPatternT extends Pattern<ItemT> = Pattern<ItemT>> extends AggregateError {
     constructor(
         readonly item_pattern_matches: ItemPatternMatches<ItemT, ItemPatternT>,
     ) {
@@ -86,6 +85,7 @@ export class ArraySubsetNoMatch<ItemT = any, ItemPatternT extends Pattern<ItemT>
     static readonly ERR_MSG = "no item was found in array satisfying pattern element"
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-constraint
 export function subsets<const T extends unknown = unknown>(pattern: Pattern<T>[]): Pattern<T[]> {
     return lambda(array => {
         const item_pattern_matches = pattern.map<ItemPatternMatches[number]>(item_pattern => {
@@ -104,21 +104,21 @@ export function subsets<const T extends unknown = unknown>(pattern: Pattern<T>[]
 
 const patternLambdaKey = Symbol("pattern lambda")
 export type PatternLambda<T> = {
-    [patternLambdaKey]: (item: T) => any
+    [patternLambdaKey]: (item: T) => unknown
 }
 
 interface PatternMatchResult_Lambda_Base<T, Pattern_ extends PatternLambda<T>, Type extends PatternMatchResultType> extends PatternMatchResult<T, Pattern_, Type> {
-    result: any
+    result: unknown
 }
 
-export interface PatternMatchResult_Lambda_Success<T = any, Pattern_ extends PatternLambda<T> = PatternLambda<T>> extends PatternMatchResult_Lambda_Base<T, Pattern_, PatternMatchResultType.success>, PatternMatchResultSuccess<T, Pattern_> {
+export interface PatternMatchResult_Lambda_Success<T = unknown, Pattern_ extends PatternLambda<T> = PatternLambda<T>> extends PatternMatchResult_Lambda_Base<T, Pattern_, PatternMatchResultType.success>, PatternMatchResultSuccess<T, Pattern_> {
 }
 
-export interface PatternMatchResult_Lambda_Error<T = any, Pattern_ extends PatternLambda<T> = PatternLambda<T>> extends PatternMatchResult_Lambda_Base<T, Pattern_, PatternMatchResultType.error>, PatternMatchResultError<T, Pattern_> {
+export interface PatternMatchResult_Lambda_Error<T = unknown, Pattern_ extends PatternLambda<T> = PatternLambda<T>> extends PatternMatchResult_Lambda_Base<T, Pattern_, PatternMatchResultType.error>, PatternMatchResultError<T, Pattern_> {
     kind: "thrown" | "returned"
 }
 
-export type PatternMatchResult_Lambda<T = any, Pattern_ extends PatternLambda<T> = PatternLambda<T>> =
+export type PatternMatchResult_Lambda<T = unknown, Pattern_ extends PatternLambda<T> = PatternLambda<T>> =
     | PatternMatchResult_Lambda_Success<T, Pattern_>
     | PatternMatchResult_Lambda_Error<T, Pattern_>
 
@@ -131,7 +131,7 @@ export function match<T, Pattern_ extends Pattern<T>>(item: T, pattern: Pattern_
 
     if (typeof item === 'object' && item && typeof pattern === 'object' && pattern && pattern_partialObj_is(item, pattern))
         return match_partialObj(item, pattern)
-    
+
     return match_literal(item, <Pattern_ & PatternLiteral<T>>pattern)
 }
 
@@ -139,7 +139,7 @@ function match_literal<T, Pattern_ extends PatternLiteral<T>>(item: T, pattern: 
     const type = (item === pattern) ?
         PatternMatchResultType.success :
         PatternMatchResultType.error
-    
+
     return {
         type,
         item,
@@ -147,9 +147,9 @@ function match_literal<T, Pattern_ extends PatternLiteral<T>>(item: T, pattern: 
     }
 }
 
-function match_array<T extends any[], Pattern_ extends PatternArray<T>>(item: T, pattern: Pattern_): PatternMatchResult_Array<T, Pattern_> {
+function match_array<T extends unknown[], Pattern_ extends PatternArray<T>>(item: T, pattern: Pattern_): PatternMatchResult_Array<T, Pattern_> {
     if (item.length !== pattern.length) {
-        return <PatternMatchResult_Array_Error_LengthMismatch<T, Pattern_>>{
+        return {
             type: PatternMatchResultType.error,
             message: ERR_ARRAY_LENGTH_MISMATCH,
             item,
@@ -160,6 +160,7 @@ function match_array<T extends any[], Pattern_ extends PatternArray<T>>(item: T,
     return match_partialObj(item, pattern)
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function pattern_partialObj_is<T>(item: T, _pattern: Pattern<T>): _pattern is PatternPartialObj<T> {
     if (typeof item !== 'object' || item === null)
         return false
@@ -170,11 +171,13 @@ function pattern_partialObj_is<T>(item: T, _pattern: Pattern<T>): _pattern is Pa
 function match_partialObj<T extends object, Pattern_ extends PatternPartialObj<T>>(item: T, pattern: Pattern_): PatternMatchResult_PartialObj<T, Pattern_> {
     const results = <PatternMatchResult_PartialObj<T, Pattern_>["results"]>{}
     type K = keyof T & keyof Pattern_
+    type Item_K = T[K]
+    type Pattern_K = Pattern_[K] extends Pattern<T[K]> ? Pattern_[K] : Pattern<T[K]>
 
-    for (const [key, pattern_key] of <[K, Pattern][]><unknown>Object.entries(pattern)) {
+    for (const [key, pattern_key] of <[K, Pattern_K][]><unknown>Object.entries(pattern)) {
         if (pattern_key === fieldMissing) {
             if (key in item) {
-                results[key] = <PatternMatchResultError_PartialObj_FieldNotMissing>{
+                results[key] = <PatternMatchResultError_PartialObj_FieldNotMissing<Item_K, Pattern_K>>{
                     item: item[key],
                     pattern: pattern_key,
                     type: PatternMatchResultType.error,
@@ -193,7 +196,7 @@ function match_partialObj<T extends object, Pattern_ extends PatternPartialObj<T
             if (key in item)
                 results[key] = match(item[key], pattern_key)
             else {
-                results[key] = <PatternMatchResultError_PartialObj_FieldMissing>{
+                results[key] = <PatternMatchResultError_PartialObj_FieldMissing<Item_K, Pattern_K>>{
                     type: PatternMatchResultType.error,
                     item: undefined,
                     pattern: pattern_key,
@@ -213,15 +216,16 @@ function match_partialObj<T extends object, Pattern_ extends PatternPartialObj<T
     } satisfies Partial<PatternMatchResult_PartialObj_Base<T, Pattern_, PatternMatchResultType>>
 
     return errors_filtered.length === 0 ?
-        <PatternMatchResult_PartialObj_Success<T, Pattern_>>{
+        {
             ...base,
             type: PatternMatchResultType.success,
-        } :
-        <PatternMatchResult_PartialObj_Error<T, Pattern_>>{
+        } satisfies PatternMatchResult_PartialObj_Success<T, Pattern_>
+        :
+        {
             ...base,
             type: PatternMatchResultType.error,
             errors,
-        }
+        } satisfies PatternMatchResult_PartialObj_Error<T, Pattern_>
 }
 
 function pattern_lambda_is<T, Pattern_ extends Pattern<T>>(pattern_untyped: Pattern_): pattern_untyped is PatternLambda<T> & Pattern_ {
@@ -231,32 +235,32 @@ function pattern_lambda_is<T, Pattern_ extends Pattern<T>>(pattern_untyped: Patt
 function match_lambda<T, Pattern_ extends PatternLambda<T>>(item: T, pattern: Pattern_): PatternMatchResult_Lambda<T, Pattern_> {
     try {
         const result = pattern[patternLambdaKey](item)
-        if (result) {
-            return <PatternMatchResult_Lambda_Success<T, Pattern_>>{
+        if (<boolean>result) {
+            return {
                 type: PatternMatchResultType.success,
                 pattern,
                 item,
                 result,
-            }
+            } satisfies PatternMatchResult_Lambda_Success<T, Pattern_>
         }
         else {
-            return <PatternMatchResult_Lambda_Error<T, Pattern_>>{
+            return {
                 type: PatternMatchResultType.error,
                 pattern,
                 item,
                 result,
                 kind: "returned",
-            }
+            } satisfies PatternMatchResult_Lambda_Error<T, Pattern_>
         }
     }
     catch (error) {
-        return <PatternMatchResult_Lambda_Error<T, Pattern_>>{
+        return {
             type: PatternMatchResultType.error,
             pattern,
             item,
             result: error,
             kind: "thrown",
-        }
+        } satisfies PatternMatchResult_Lambda_Error<T, Pattern_>
     }
 }
 

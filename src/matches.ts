@@ -1,5 +1,5 @@
 import { match, Pattern, PatternMatchResultType } from "./pattern.js";
-import chalk from 'chalk'
+import chalk from 'chalk';
 
 export interface WithTrueAssert {
     true(ok: boolean, message?: string): ok is true
@@ -15,7 +15,7 @@ export function req_matches<T>(t: WithTrueAssert | WithPassFail, item: T, patter
     const ok = result.type === PatternMatchResultType.success
     const message = ok ? undefined :
         `${chalk.red('actual')}, ${chalk.green('expected')}\n${chalk.red(JSON.stringify(result))}\n${chalk.green(JSON.stringify(pattern))}`
-    
+
     if ('pass' in t) {
         if (ok)
             t.pass()
@@ -23,7 +23,7 @@ export function req_matches<T>(t: WithTrueAssert | WithPassFail, item: T, patter
             t.fail(message)
     }
     else {
-        t.true(ok, ...(message ? [message] : []))
+        t.true(ok, ...((message != null) ? [message] : []))
     }
 
     return ok

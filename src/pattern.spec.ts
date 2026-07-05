@@ -37,12 +37,12 @@ test("partial 5", t => {
     t.is(_.type, PatternMatchResultType.error)
     t.deepEqual(Object.keys(_.results), ["a", "b", "c"])
     t.deepEqual(_.errors, {
-        c: <PatternMatchResultError_PartialObj_FieldMissing>{
+        c: {
             pattern: 100,
             message: ERR_FIELD_MISSING,
             item: undefined,
             type: PatternMatchResultType.error,
-        }
+        } satisfies PatternMatchResultError_PartialObj_FieldMissing
     })
 })
 
@@ -57,12 +57,12 @@ test("partial 7", t => {
     t.is(_.type, PatternMatchResultType.error)
     t.deepEqual(Object.keys(_.results), ["a", "b", "c"])
     t.deepEqual(_.errors, {
-        c: <PatternMatchResultError_PartialObj_FieldNotMissing>{
+        c: {
             pattern: fieldMissing,
             message: ERR_FIELD_NOT_MISSING,
             item: 100,
             type: PatternMatchResultType.error,
-        }
+        } satisfies PatternMatchResultError_PartialObj_FieldNotMissing
     })
 })
 
